@@ -7,16 +7,30 @@
  *
  * @author Brian
  */
+
+//Import Library
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class SecureLoginApp extends JFrame implements ActionListener {
-    // UI Component
+    
+    // Input Field
+    JTextField usernameField;
+    JPasswordField passwordField;
+    
+    // BTN
+    JButton applyButton;
+    JButton resetButton;
+    JButton quitButton;
+    
+    // Output Field (only read)
+    JTextField outputUsername;
+    JTextField outputPassword;
 
     // CONSTRUCTUR
     public SecureLoginApp() {
-
+        
     }
 
     // METHOD
