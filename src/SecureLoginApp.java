@@ -7,18 +7,26 @@
  *
  * @author Brian
  */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class SecureLoginApp extends JFrame implements ActionListener {
-    public SecureLoginApp(){
+    // UI Component
+
+    // CONSTRUCTUR
+    public SecureLoginApp() {
+
     }
-    
+
+    // METHOD
     public void actionPerformed(ActionEvent e) {
+
     }
-    
-    public static void main(String[] args){
+
+    // MAIN METHOD
+    public static void main(String[] args) {
+        new SecureLoginApp();
     }
+
 }
