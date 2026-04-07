@@ -7,7 +7,6 @@
  *
  * @author Brian
  */
-
 //Import Library
 import javax.swing.*;
 import java.awt.*;
@@ -75,7 +74,21 @@ public class SecureLoginApp extends JFrame implements ActionListener {
 
     // METHOD
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == applyButton) {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            outputUsername.setText(username);
+            outputPassword.setText(password);
+        } else if (e.getSource() == resetButton) {
+            usernameField.setText("");
+            passwordField.setText("");
+            outputUsername.setText("");
+            outputPassword.setText("");
 
+            usernameField.requestFocus();
+        } else if (e.getSource() == quitButton) {
+            dispose();
+        }
     }
 
     // MAIN METHOD
