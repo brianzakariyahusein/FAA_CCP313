@@ -7,7 +7,6 @@
  *
  * @author Brian
  */
-
 // Import required libraries
 import javax.swing.*;
 import java.awt.*;
@@ -15,158 +14,167 @@ import java.awt.event.*;
 
 public class LayoutShowcaseApp extends JFrame implements ActionListener {
 
-    // CardLayout and its container
-    CardLayout cardLayout;
-    JPanel cardPanel;
-
-    // Two main panels
-    JPanel panelA;
-    JPanel panelB;
+    // CardLayout + its container (used to switch panels)
+    private CardLayout cardLayout;
+    private JPanel cardContainer;
 
     // Switch buttons
-    JButton btnSwitchA;
-    JButton btnSwitchB;
+    private JButton btnPanelA;
+    private JButton btnPanelB;
 
+    // Panel name constants
+    private static final String PANEL_A = "Panel A";
+    private static final String PANEL_B = "Panel B";
+    
     public LayoutShowcaseApp() {
-
-        // Configure main frame
+        // 1. Frame setup
         setTitle("Layout Showcase");
-        setSize(500, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(480, 360));
         setLayout(new BorderLayout());
 
-        // Initialize CardLayout and its container
+        // 2. Top navigation bar with two switch buttons
+        JPanel navBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        navBar.setBackground(new Color(50, 50, 50));
+
+        btnPanelA = new JButton("Switch to Panel A");
+        btnPanelB = new JButton("Switch to Panel B");
+
+        btnPanelA.addActionListener(this);
+        btnPanelB.addActionListener(this);
+
+        navBar.add(btnPanelA);
+        navBar.add(btnPanelB);
+        add(navBar, BorderLayout.NORTH);
+
+        // 3. Card container holds Panel A and Panel B
         cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
+        cardContainer = new JPanel(cardLayout);
+        cardContainer.add(buildPanelA(), PANEL_A);
+        cardContainer.add(buildPanelB(), PANEL_B);
+        add(cardContainer, BorderLayout.CENTER);
 
-        // Create Panel A and Panel B
-        panelA = buildPanelA();
-        panelB = buildPanelB();
+        // 4. Status bar at the bottom
+        JLabel statusBar = new JLabel("  Currently showing: Panel A  (GridLayout)",
+                SwingConstants.LEFT);
+        statusBar.setOpaque(true);
+        statusBar.setBackground(new Color(220, 220, 220));
+        statusBar.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        add(statusBar, BorderLayout.SOUTH);
 
-        // Add panels to CardLayout container
-        cardPanel.add(panelA, "A");
-        cardPanel.add(panelB, "B");
+        // Keep a reference so actionPerformed can update it
+        this.statusBar = statusBar;
 
-        // Create button panel at the bottom (SOUTH region)
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        btnSwitchA = new JButton("Switch to Panel A");
-        btnSwitchB = new JButton("Switch to Panel B");
+        // Show Panel A first
+        cardLayout.show(cardContainer, PANEL_A);
 
-        // Register action listeners
-        btnSwitchA.addActionListener(this);
-        btnSwitchB.addActionListener(this);
-
-        buttonPanel.add(btnSwitchA);
-        buttonPanel.add(btnSwitchB);
-
-        // Add components to the frame
-        add(cardPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
-
+        pack();
         setLocationRelativeTo(null);
-        setVisible(true);
     }
 
-    // Panel A using BorderLayout
+    // stored reference to status bar label
+    private JLabel statusBar;
+    
+    // Panel A
     private JPanel buildPanelA() {
-        JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBackground(new Color(0x16213e));
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        // NORTH - Title section
-        JLabel title = new JLabel("Panel A  —  BorderLayout", SwingConstants.CENTER);
-        title.setForeground(new Color(0xCECBF6));
-        title.setFont(new Font("SansSerif", Font.BOLD, 14));
-        title.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
+        // Header
+        JLabel header = new JLabel("Panel A GridLayout (3 × 2)", SwingConstants.CENTER);
+        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        wrapper.add(header, BorderLayout.NORTH);
 
-        // WEST - Left section
-        JLabel west = new JLabel("  WEST  ", SwingConstants.CENTER);
-        west.setOpaque(true);
-        west.setBackground(new Color(0x26215C));
-        west.setForeground(new Color(0xAFA9EC));
-        west.setFont(new Font("SansSerif", Font.PLAIN, 12));
-
-        // CENTER - Main content area
-        JLabel center = new JLabel("CENTER — Main Area", SwingConstants.CENTER);
-        center.setOpaque(true);
-        center.setBackground(new Color(0x0f0f23));
-        center.setForeground(new Color(0x7F77DD));
-        center.setFont(new Font("SansSerif", Font.PLAIN, 12));
-
-        // EAST - Right section
-        JLabel east = new JLabel("  EAST  ", SwingConstants.CENTER);
-        east.setOpaque(true);
-        east.setBackground(new Color(0x26215C));
-        east.setForeground(new Color(0xAFA9EC));
-        east.setFont(new Font("SansSerif", Font.PLAIN, 12));
-
-        // SOUTH - Status bar
-        JLabel south = new JLabel("SOUTH — Status Bar", SwingConstants.CENTER);
-        south.setOpaque(true);
-        south.setBackground(new Color(0x1e1a4a));
-        south.setForeground(new Color(0xAFA9EC));
-        south.setFont(new Font("SansSerif", Font.PLAIN, 11));
-        south.setBorder(BorderFactory.createEmptyBorder(8, 0, 8, 0));
-
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(west, BorderLayout.WEST);
-        panel.add(center, BorderLayout.CENTER);
-        panel.add(east, BorderLayout.EAST);
-        panel.add(south, BorderLayout.SOUTH);
-
-        return panel;
-    }
-
-    // Panel B using GridLayout
-    private JPanel buildPanelB() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(0x16213e));
-
-        // Title section
-        JLabel title = new JLabel("Panel B  —  GridLayout", SwingConstants.CENTER);
-        title.setForeground(new Color(0xCECBF6));
-        title.setFont(new Font("SansSerif", Font.BOLD, 14));
-        title.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
-
-        // Grid container (3 rows x 2 columns)
+        // Grid panel with 6 components (3 rows, 2 cols, gaps 8px)
         JPanel grid = new JPanel(new GridLayout(3, 2, 8, 8));
-        grid.setBackground(new Color(0x16213e));
-        grid.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 20));
 
-        String[] labels = {"Name", "Email", "City"};
-
-        for (String labelText : labels) {
-            // Label component
-            JLabel lbl = new JLabel(labelText);
-            lbl.setForeground(new Color(0xAFA9EC));
-            lbl.setFont(new Font("SansSerif", Font.PLAIN, 13));
-
-            // Input field component
-            JTextField field = new JTextField();
-            field.setBackground(new Color(0x0f0f23));
-            field.setForeground(new Color(0x7F77DD));
-            field.setCaretColor(new Color(0xAFA9EC));
-            field.setBorder(BorderFactory.createLineBorder(new Color(0x2d2b55), 1));
-
-            grid.add(lbl);
-            grid.add(field);
+        String[] labels = {"Name", "Email", "Phone", "Address", "City", "Country"};
+        for (String text : labels) {
+            JPanel cell = new JPanel(new BorderLayout(4, 4));
+            cell.setBorder(BorderFactory.createTitledBorder(text));
+            cell.add(new JTextField(), BorderLayout.CENTER);
+            grid.add(cell);
         }
 
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(grid, BorderLayout.CENTER);
+        wrapper.add(grid, BorderLayout.CENTER);
+        return wrapper;
+    }
+    
+    // Panel B
+    private JPanel buildPanelB() {
+        JPanel wrapper = new JPanel(new BorderLayout());
+        wrapper.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        return panel;
+        // Header
+        JLabel header = new JLabel("Panel B BorderLayout (5 regions)", SwingConstants.CENTER);
+        header.setFont(new Font("SansSerif", Font.BOLD, 14));
+        header.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        wrapper.add(header, BorderLayout.NORTH);
+
+        // Inner panel that uses BorderLayout with hgap/vgap
+        JPanel border = new JPanel(new BorderLayout(6, 6));
+
+        // NORTH region
+        JLabel north = new JLabel("NORTH (Header / Toolbar area)", SwingConstants.CENTER);
+        north.setOpaque(true);
+        north.setBackground(new Color(173, 216, 230));   // light blue
+        north.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        north.setPreferredSize(new Dimension(0, 45));
+        border.add(north, BorderLayout.NORTH);
+
+        // SOUTH region
+        JLabel south = new JLabel("SOUTH (Footer / Status bar)", SwingConstants.CENTER);
+        south.setOpaque(true);
+        south.setBackground(new Color(144, 238, 144));   // light green
+        south.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        south.setPreferredSize(new Dimension(0, 45));
+        border.add(south, BorderLayout.SOUTH);
+
+        // WEST region
+        JLabel west = new JLabel("<html><center>WEST<br>Nav</center></html>", SwingConstants.CENTER);
+        west.setOpaque(true);
+        west.setBackground(new Color(255, 218, 185));    // peach
+        west.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        west.setPreferredSize(new Dimension(90, 0));
+        border.add(west, BorderLayout.WEST);
+
+        // EAST region
+        JLabel east = new JLabel("<html><center>EAST<br>Tools</center></html>", SwingConstants.CENTER);
+        east.setOpaque(true);
+        east.setBackground(new Color(221, 160, 221));    // plum
+        east.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        east.setPreferredSize(new Dimension(90, 0));
+        border.add(east, BorderLayout.EAST);
+
+        // CENTER region
+        JTextArea center = new JTextArea("CENTER\n\nThis is the main content area.\n"
+                + "It expands to fill all remaining space\n"
+                + "when the window is resized.");
+        center.setEditable(false);
+        center.setLineWrap(true);
+        center.setWrapStyleWord(true);
+        center.setBackground(new Color(255, 255, 204));  // light yellow
+        center.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        border.add(new JScrollPane(center), BorderLayout.CENTER);
+
+        wrapper.add(border, BorderLayout.CENTER);
+        return wrapper;
     }
 
-    // Handle button click events
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnSwitchA) {
-            cardLayout.show(cardPanel, "A"); // Show Panel A
-        } else if (e.getSource() == btnSwitchB) {
-            cardLayout.show(cardPanel, "B"); // Show Panel B
+        if (e.getSource() == btnPanelA) {
+            cardLayout.show(cardContainer, PANEL_A);
+            statusBar.setText("  Currently showing: Panel A  (GridLayout)");
+        } else if (e.getSource() == btnPanelB) {
+            cardLayout.show(cardContainer, PANEL_B);
+            statusBar.setText("  Currently showing: Panel B  (BorderLayout)");
         }
     }
 
+    // Main (Entry Point)
     public static void main(String[] args) {
-        new LayoutShowcaseApp();
+        SwingUtilities.invokeLater(() -> new LayoutShowcaseApp().setVisible(true));
     }
 }
