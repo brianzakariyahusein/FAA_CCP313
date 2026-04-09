@@ -88,7 +88,9 @@ public class SecureLoginApp extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
-        mainPanel.add(new JSeparator(), gbc);
+        JSeparator sep1 = new JSeparator();
+        sep1.setForeground(Color.LIGHT_GRAY);
+        mainPanel.add(sep1, gbc);
         gbc.gridwidth = 1;
 
         // Output Section Label
@@ -130,7 +132,9 @@ public class SecureLoginApp extends JFrame implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 8;
         gbc.gridwidth = 2;
-        mainPanel.add(new JSeparator(), gbc);
+        JSeparator sep2 = new JSeparator();
+        sep2.setForeground(Color.LIGHT_GRAY);
+        mainPanel.add(sep2, gbc);
         gbc.gridwidth = 1;
 
         // BTN Panel
